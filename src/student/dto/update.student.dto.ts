@@ -1,4 +1,5 @@
 import { IsNotEmpty, IsOptional } from 'class-validator';
+import { Lesson } from 'src/lesson/lesson.entity';
 
 export class UpdateStudentDto{
     @IsOptional()
@@ -7,5 +8,9 @@ export class UpdateStudentDto{
     
     @IsOptional()
     @IsNotEmpty()
-    lastName: string; 
+    lastName: string;
+    
+    @IsOptional()
+    @IsNotEmpty()
+    lessons: number[]; 
 }

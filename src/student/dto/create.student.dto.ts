@@ -8,7 +8,7 @@ export class CreateStudentDto{
     @IsNotEmpty()
     lastName: string; 
 
-    // @IsOptional()
-    // @IsNotEmpty()
-    // lessons: Lesson[]; 
+    @IsOptional()
+    @IsNotEmpty()
+    lessons: number[]; 
 }

@@ -1,10 +1,11 @@
-import { Entity, BaseEntity, PrimaryGeneratedColumn, Column, ManyToMany } from "typeorm";
-import { Student } from "src/student/student.entity";
+import { Entity, BaseEntity, PrimaryGeneratedColumn, Column, ManyToMany, JoinColumn, OneToMany } from "typeorm";
+//import { Student } from "src/student/student.entity";
+import { StudentsToLessons } from "../relations/lesson-student.entity";
 
 @Entity()
 export class Lesson extends BaseEntity{
     @PrimaryGeneratedColumn()
-    id: string; 
+    id: number; 
 
     @Column() 
     Name: string; 
@@ -15,6 +16,7 @@ export class Lesson extends BaseEntity{
     @Column() 
     endDate: string; 
 
-    @ManyToMany(type => Student, student => student.lessons)
-    students: Student[]; 
+
+    @OneToMany(() => StudentsToLessons, (studentstolessons: StudentsToLessons) => studentstolessons.lessons)
+    studentsToLessons!: StudentsToLessons[];
 }

@@ -17,30 +17,29 @@ export class StudentController{
     }
 
     @Get('/:id')
-    getStudentById(@Param('id') id: string): Promise<Student>{
+    getStudentById(@Param('id') id: number): Promise<Student>{
         return this.studentService.getStudent(id);
     }
 
     @Post()
     @UsePipes(ValidationPipe)
     createStudent(
-        @Body() createStudentDto: CreateStudentDto,
-        @Body() lesson: Lesson[], 
+        @Body() createStudentDto: CreateStudentDto, 
         ){
-        return this.studentService.createStudent(lesson, createStudentDto);
+        return this.studentService.createStudent(createStudentDto);
     }
 
     @Patch()
     @UsePipes(ValidationPipe)
     updateStudent(
-        @Param('id') id: string,
+        @Param('id') id: number,
         @Body() updateStudentDto: UpdateStudentDto, 
     ): Promise<Student>{
         return this.studentService.updateStudent(id, updateStudentDto);
     }
 
     @Delete('/:id')
-    deleteStudent(@Param('id') id: string): Promise<void>{
+    deleteStudent(@Param('id') id: number): Promise<void>{
         return this.studentService.deleteUser(id);
     }
 }

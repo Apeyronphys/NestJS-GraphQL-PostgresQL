@@ -18,7 +18,7 @@ export class LessonController{
 
     @Get()
     getLessonById(
-        @Param('id') id: string, 
+        @Param('id') id: number, 
     ): Promise<Lesson>{
         return this.lessonService.getLesson(id);
     }
@@ -26,22 +26,20 @@ export class LessonController{
     @Post()
     createLesson(
         @Body() createLessonDto: CreateLessonDto,
-        @Body() students: Student[],  
     ): Promise<Lesson>{
-        return this.lessonService.createlesson(students, createLessonDto);
+        return this.lessonService.createlesson(createLessonDto);
     }
 
     @Patch()
     updateLesson(
-        @Param('id') id: string, 
-        @Body() updateLessonDto: UpdateLessonDto, 
-        @Body() students: Student[], 
+        @Param('id') id: number, 
+        @Body() updateLessonDto: UpdateLessonDto,  
     ): Promise<Lesson>{
-        return this.lessonService.updateLesson(id, updateLessonDto, students);
+        return this.lessonService.updateLesson(id, updateLessonDto);
     }
 
     @Delete('/:id')
-    deleteLesson(@Param('id') id: string): Promise<void>{
+    deleteLesson(@Param('id') id: number): Promise<void>{
        return this.lessonService.deleteLesson(id);
     }
 

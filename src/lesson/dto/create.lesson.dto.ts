@@ -10,5 +10,8 @@ export class CreateLessonDto{
     startDate: string;
     
     @IsNotEmpty()
-    endDate: string; 
+    endDate: string;
+
+    @IsNotEmpty()
+    students: Student[]; 
 }

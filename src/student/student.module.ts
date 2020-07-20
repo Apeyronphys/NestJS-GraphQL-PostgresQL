@@ -4,7 +4,7 @@ import { StudentResolver } from './student.resolver';
 import { TypeOrmModule } from '@nestjs/typeorm'; 
 import { Student } from './student.entity';
 import { StudentController } from './student.controller';
-import { LessonModule } from 'src/lesson/lesson.module';
+import { LessonModule } from '../lesson/lesson.module';
 
 @Module({
   imports: [
