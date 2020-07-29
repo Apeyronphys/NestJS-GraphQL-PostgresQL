@@ -1,5 +1,5 @@
 import { IsNotEmpty, IsOptional } from 'class-validator';
-import { Lesson } from 'src/lesson/lesson.entity';
+import { Lesson } from 'src/relations/lesson.entity';
 
 export class CreateStudentDto{
     @IsNotEmpty()

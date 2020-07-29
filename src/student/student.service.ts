@@ -1,11 +1,11 @@
 import { Injectable, forwardRef, Inject, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Student } from './student.entity';
+import { Student } from '../relations/student.entity';
 import { Repository, getManager, getConnection, getRepository } from 'typeorm';
 import { CreateStudentDto } from './dto/create.student.dto';
 import { UpdateStudentDto } from './dto/update.student.dto'; 
 import { LessonService } from '../lesson/lesson.service';
-import { Lesson } from 'src/lesson/lesson.entity';
+import { Lesson } from 'src/relations/lesson.entity';
 
 @Injectable()
 export class StudentService {
@@ -31,10 +31,18 @@ export class StudentService {
     student.firstName = firstName; 
     student.lastName = lastName;
     if(lessons){
-      // const uniqExistingLesson = await this.lessonService.getUniqExitingLesson(lessons);
-      //await this.lessonService.addStudentToGroup(lessons, student.id);
-      //const lessonId = await this.lessonService.getManyLessons(lessons);
-     // student.lessons = lessonId; 
+     const lessonid = await getRepository(Lesson).findOne({
+        where:{
+          id: {
+            $id: createStudentDto.lessons,
+          },
+        },
+      });
+      student.lessons.push(lessonid);
+    //   // const uniqExistingLesson = await this.lessonService.getUniqExitingLesson(lessons);
+    //   //await this.lessonService.addStudentToGroup(lessons, student.id);
+    //   //const lessonId = await this.lessonService.getManyLessons(lessons);
+    //  // student.lessons = lessonId; 
     } 
     await student.save();  
     return student;   

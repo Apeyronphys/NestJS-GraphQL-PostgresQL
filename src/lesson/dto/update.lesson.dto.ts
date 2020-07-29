@@ -1,5 +1,5 @@
 import { IsNotEmpty, IsOptional } from 'class-validator';
-import { Student } from 'src/student/student.entity';
+import { Student } from 'src/relations/student.entity';
 
 export class UpdateLessonDto{
     
@@ -15,7 +15,4 @@ export class UpdateLessonDto{
     @IsNotEmpty()
     endDate: string;
     
-    @IsOptional()
-    @IsNotEmpty()
-    students: Student[]; 
 }

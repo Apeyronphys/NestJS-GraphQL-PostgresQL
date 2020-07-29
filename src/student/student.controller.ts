@@ -1,9 +1,9 @@
 import { Controller, Get, Param, Post, UsePipes, ValidationPipe, Body, Patch, Delete } from "@nestjs/common";
 import { StudentService } from "./student.service";
-import { Student } from "./student.entity";
+import { Student } from "../relations/student.entity";
 import { CreateStudentDto } from "./dto/create.student.dto";
 import { UpdateStudentDto } from "./dto/update.student.dto";
-import { Lesson } from "src/lesson/lesson.entity";
+import { Lesson } from "src/relations/lesson.entity";
 
 @Controller('student')
 export class StudentController{

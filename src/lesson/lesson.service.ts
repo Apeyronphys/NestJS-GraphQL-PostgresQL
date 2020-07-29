@@ -1,11 +1,11 @@
 import { Injectable, Inject, forwardRef, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Lesson } from './lesson.entity';
+import { Lesson } from '../relations/lesson.entity';
 import { CreateLessonDto } from './dto/create.lesson.dto';
 import { UpdateLessonDto } from './dto/update.lesson.dto';
 import { StudentService } from '../student/student.service';
-import { Student } from 'src/student/student.entity';
+import { Student } from 'src/relations/student.entity';
 
 @Injectable()
 export class LessonService {
@@ -24,7 +24,7 @@ export class LessonService {
       }
 
       async createlesson(createLessonDto: CreateLessonDto): Promise<Lesson>{
-        const { Name, startDate, endDate, students } = createLessonDto;
+        const { Name, startDate, endDate } = createLessonDto;
         const lesson = new Lesson(); 
         lesson.Name = Name; 
         lesson.startDate = startDate; 
@@ -36,7 +36,7 @@ export class LessonService {
       }
 
       async updateLesson(id: number, updateLessonDto: UpdateLessonDto/*, students: Student[]*/): Promise<Lesson>{
-        const { Name, startDate, endDate, students } = updateLessonDto;
+        const { Name, startDate, endDate } = updateLessonDto;
         const lesson = await this.getLesson(id);
 
         if (Name){

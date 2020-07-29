@@ -4,7 +4,8 @@ import { StudentModule } from './student/student.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { GraphQLModule } from '@nestjs/graphql';
 import { typeOrmConfig } from './config/typeorm.config';
-import { join } from 'path';
+
+
 
 @Module({
   imports: [

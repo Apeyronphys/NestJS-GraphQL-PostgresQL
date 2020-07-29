@@ -1,23 +1,20 @@
-import { Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn, BaseEntity, Column } from "typeorm";
-import { Student } from "../student/student.entity";
-import { Lesson } from "../lesson/lesson.entity";
+import { Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn, BaseEntity, Column, PrimaryColumn } from 'typeorm';
+import { Lesson } from './lesson.entity';
+import { Student } from './student.entity';
 
-Entity()
+Entity('students_lessons')
 export class StudentsToLessons extends BaseEntity{
-    @PrimaryGeneratedColumn()
-    id: number; 
-
-    @Column()
+    @PrimaryColumn()
     student_id: number; 
 
-    @Column() 
-    lesson_id: number; 
-
-    @ManyToOne(() => Student, (student: Student) => student.studentsToLessons)
-    //@JoinColumn({name: 'student_id'})
-    students!: Student;
+    @PrimaryColumn() 
+    lesson_id: number;
     
-    @ManyToOne(() => Lesson, (lesson: Lesson) => lesson.studentsToLessons)
-    //@JoinColumn({name: 'lesson_id'})
-    lessons!: Lesson;
+    // @ManyToOne((type) => Lesson/*, (lesson: Lesson) => lesson.studentsToLessons*/)
+    // //@JoinColumn({name: 'lesson_id'})
+    // lessons: Promise<Lesson>;
+
+    // @ManyToOne((type) => Student/*, (student: Student) => student.studentsToLessons,*/)
+    // //@JoinColumn({name: 'student_id'})
+    // students: Promise<Student>;
 }
