@@ -1,4 +1,4 @@
-import { Entity, BaseEntity, PrimaryGeneratedColumn, Column, OneToMany, JoinColumn, ManyToMany } from 'typeorm';
+import { Entity, BaseEntity, PrimaryGeneratedColumn, Column, OneToMany, JoinColumn, ManyToMany, JoinTable } from 'typeorm';
 import { Type } from 'class-transformer';
 //import { Lesson } from 'src/lesson/lesson.entity';
 import {StudentsToLessons}  from './lesson-student.entity';
@@ -18,6 +18,7 @@ export class Student extends BaseEntity{
     lastName: string; 
      
     @ManyToMany(type => Lesson, lessons => lessons.students)
+    @JoinTable({ name: 'students_lessons' })
     lessons: Lesson[]; 
 
     // @OneToMany(() => StudentsToLessons, (studentstolessons: StudentsToLessons) => studentstolessons.students)

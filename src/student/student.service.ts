@@ -31,14 +31,12 @@ export class StudentService {
     student.firstName = firstName; 
     student.lastName = lastName;
     if(lessons){
-     const lessonid = await getRepository(Lesson).findOne({
-        where:{
-          id: {
-            $id: createStudentDto.lessons,
-          },
-        },
-      });
-      student.lessons.push(lessonid);
+     const lessonid = await getManager()
+          .createQueryBuilder(Lesson,'lesson')
+          .where('lesson.id = :id', { id: lessons })
+          .getMany()
+
+      student.lessons = lessonid;
     //   // const uniqExistingLesson = await this.lessonService.getUniqExitingLesson(lessons);
     //   //await this.lessonService.addStudentToGroup(lessons, student.id);
     //   //const lessonId = await this.lessonService.getManyLessons(lessons);
@@ -49,7 +47,7 @@ export class StudentService {
   }
 
   async updateStudent(id: number, updateStudentDto: UpdateStudentDto): Promise<Student>{
-    const { firstName, lastName } = updateStudentDto;
+    const { firstName, lastName, lessons } = updateStudentDto;
     const student = await this.getStudent(id);
     
     if(firstName){
@@ -58,6 +56,15 @@ export class StudentService {
 
     if(lastName){
       student.lastName = lastName; 
+    }
+
+    if(lessons){
+      const lessonid = await getManager()
+          .createQueryBuilder(Lesson,'lesson')
+          .where('lesson.id = :id', { id: lessons })
+          .getMany()
+
+      student.lessons = lessonid;
     }
 
     await student.save(); 
