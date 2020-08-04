@@ -16,6 +16,8 @@ export class Student extends BaseEntity{
 
     @Column()
     lastName: string; 
+
+
      
     @ManyToMany(type => Lesson, lessons => lessons.students)
     @JoinTable({ name: 'students_lessons' })

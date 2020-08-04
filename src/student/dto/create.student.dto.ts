@@ -1,5 +1,7 @@
 import { IsNotEmpty, IsOptional } from 'class-validator';
 import { Lesson } from 'src/relations/lesson.entity';
+import { Student } from 'src/relations/student.entity';
+import { Column } from 'typeorm';
 
 export class CreateStudentDto{
     @IsNotEmpty()
@@ -10,5 +12,7 @@ export class CreateStudentDto{
 
     @IsOptional()
     @IsNotEmpty()
-    lessons: number[]; 
+    @Column({type: 'real'})
+    lessons: string[]; 
+
 }

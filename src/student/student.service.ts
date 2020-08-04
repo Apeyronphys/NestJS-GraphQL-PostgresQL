@@ -31,17 +31,27 @@ export class StudentService {
     student.firstName = firstName; 
     student.lastName = lastName;
     if(lessons){
-     const lessonid = await getManager()
-          .createQueryBuilder(Lesson,'lesson')
-          .where('lesson.id = :id', { id: lessons })
-          .getMany()
+    //  const lessonid = await getManager()
+    //       .createQueryBuilder(Lesson,'lesson')
+    //       .where('lesson.id = :id', { id: lessons })
+    //       .getMany()
+    const lessonid = await this.addLessonToStudent(lessons);
 
-      student.lessons = lessonid;
+    student.lessons = lessonid;
     //   // const uniqExistingLesson = await this.lessonService.getUniqExitingLesson(lessons);
     //   //await this.lessonService.addStudentToGroup(lessons, student.id);
     //   //const lessonId = await this.lessonService.getManyLessons(lessons);
     //  // student.lessons = lessonId; 
     } 
+    // if(friends){
+    //   // const friendsid = await getManager()
+    //   // .createQueryBuilder(Student, 'student')
+    //   // .where('student.id = :id', { id: friends })
+    //   // .getMany()
+
+    //   //student.friends = friendsid;  
+    // }
+ 
     await student.save();  
     return student;   
   }
@@ -51,20 +61,29 @@ export class StudentService {
     const student = await this.getStudent(id);
     
     if(firstName){
-      student.firstName = firstName; 
+      getConnection()
+      .createQueryBuilder()
+      .update(Student)
+      .set({ firstName: firstName })
+      //student.firstName = firstName; 
     }
 
     if(lastName){
-      student.lastName = lastName; 
+      getConnection()
+      .createQueryBuilder()
+      .update(Student)
+      .set({ lastName: lastName })
+      //student.lastName = lastName; 
     }
 
     if(lessons){
-      const lessonid = await getManager()
-          .createQueryBuilder(Lesson,'lesson')
-          .where('lesson.id = :id', { id: lessons })
-          .getMany()
+      await getManager()
+          .createQueryBuilder(Student,'student')
+          .update()
+          .set({ })
+          .where('student.id = :id', { id: id })
+          .execute()
 
-      student.lessons = lessonid;
     }
 
     await student.save(); 
@@ -77,7 +96,14 @@ export class StudentService {
   }
 
 
+  async addLessonToStudent(id: string[]): Promise<Lesson[]>{
+    const lessons = await getManager()
+    .createQueryBuilder(Lesson, 'lesson')
+    .where('lesson.id = :id', { id: id })
+    .getMany()
 
+    return lessons; 
+  }
 
 
   
