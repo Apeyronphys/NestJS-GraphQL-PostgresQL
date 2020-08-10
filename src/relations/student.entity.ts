@@ -1,7 +1,6 @@
 import { Entity, BaseEntity, PrimaryGeneratedColumn, Column, OneToMany, JoinColumn, ManyToMany, JoinTable } from 'typeorm';
 import { Type } from 'class-transformer';
 //import { Lesson } from 'src/lesson/lesson.entity';
-import {StudentsToLessons}  from './lesson-student.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Lesson } from './lesson.entity';
 
@@ -9,7 +8,13 @@ import { Lesson } from './lesson.entity';
 export class Student extends BaseEntity{
     
     @PrimaryGeneratedColumn()
-    id: number; 
+    id: number;
+    
+    @Column({ nullable: true })
+    studentId: string;
+
+    @Column({ nullable: true })
+    studentId_1: string;
 
     @Column() 
     firstName: string; 
@@ -17,14 +22,15 @@ export class Student extends BaseEntity{
     @Column()
     lastName: string; 
 
+    @ManyToMany(type => Student, student => student.friends)
+    @JoinTable({ name: 'student_friends' })
+    friends: Student[]; 
 
-     
     @ManyToMany(type => Lesson, lessons => lessons.students)
     @JoinTable({ name: 'students_lessons' })
     lessons: Lesson[]; 
 
-    // @OneToMany(() => StudentsToLessons, (studentstolessons: StudentsToLessons) => studentstolessons.students)
-    // @Type((t) => StudentsToLessons)
+    // @OneToMany(() => Student, (student: Student) => student.students)
     // @JoinColumn()
-    // studentsToLessons?: Promise<StudentsToLessons[]>;
+    // students: Student[];
 }

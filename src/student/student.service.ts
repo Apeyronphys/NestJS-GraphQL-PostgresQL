@@ -6,6 +6,7 @@ import { CreateStudentDto } from './dto/create.student.dto';
 import { UpdateStudentDto } from './dto/update.student.dto'; 
 import { LessonService } from '../lesson/lesson.service';
 import { Lesson } from 'src/relations/lesson.entity';
+import { forEachChild } from 'typescript';
 
 @Injectable()
 export class StudentService {
@@ -17,40 +18,35 @@ export class StudentService {
 
   async getStudent(id: number): Promise<Student>{
     return getRepository(Student).findOne(id);
-    //return this.studentRepository.findOne({ id });
   }
 
   async getStudents(): Promise<Student[]>{
-    return getConnection().manager.find(Student); 
-    //return this.studentRepository.find(); 
+    return getConnection().manager.find(Student);
   }
 
   async createStudent(createStudentDto: CreateStudentDto): Promise<Student>{
-    const { firstName, lastName, lessons } = createStudentDto;
+    const { firstName, lastName, lessons,friends } = createStudentDto;
     const student = new Student(); 
     student.firstName = firstName; 
     student.lastName = lastName;
+    student.lessons = []; 
+    student.friends = []; 
+
     if(lessons){
-    //  const lessonid = await getManager()
-    //       .createQueryBuilder(Lesson,'lesson')
-    //       .where('lesson.id = :id', { id: lessons })
-    //       .getMany()
-    const lessonid = await this.addLessonToStudent(lessons);
-
-    student.lessons = lessonid;
-    //   // const uniqExistingLesson = await this.lessonService.getUniqExitingLesson(lessons);
-    //   //await this.lessonService.addStudentToGroup(lessons, student.id);
-    //   //const lessonId = await this.lessonService.getManyLessons(lessons);
-    //  // student.lessons = lessonId; 
+      for(let i = 0; i < lessons.length; i++){
+        const lessonid = await this.addLessonToStudent(lessons[i]);
+        student.lessons.push(lessonid);
+      }
     } 
-    // if(friends){
-    //   // const friendsid = await getManager()
-    //   // .createQueryBuilder(Student, 'student')
-    //   // .where('student.id = :id', { id: friends })
-    //   // .getMany()
 
-    //   //student.friends = friendsid;  
-    // }
+  if(friends){
+    for(let i = 0; i < friends.length; i++){
+      const studentid = await this.addFriendsToStudent(friends[i]);
+      console.log(studentid);
+      student.friends.push(studentid);
+    }
+
+  }
  
     await student.save();  
     return student;   
@@ -59,33 +55,32 @@ export class StudentService {
   async updateStudent(id: number, updateStudentDto: UpdateStudentDto): Promise<Student>{
     const { firstName, lastName, lessons } = updateStudentDto;
     const student = await this.getStudent(id);
-    
+     student.lessons = []; 
     if(firstName){
-      getConnection()
-      .createQueryBuilder()
-      .update(Student)
-      .set({ firstName: firstName })
-      //student.firstName = firstName; 
+      student.firstName = firstName; 
     }
 
     if(lastName){
-      getConnection()
-      .createQueryBuilder()
-      .update(Student)
-      .set({ lastName: lastName })
-      //student.lastName = lastName; 
+      student.lastName = lastName; 
     }
 
     if(lessons){
-      await getManager()
-          .createQueryBuilder(Student,'student')
-          .update()
-          .set({ })
-          .where('student.id = :id', { id: id })
-          .execute()
 
+      for(let i = 0; i < lessons.length; i++){
+      const lessonid = await this.addLessonToStudent(lessons[i]);
+
+      // await getManager()
+      //     .createQueryBuilder()
+      //     .update(Student)
+      //     .set({ lessons:  lessonid })
+      //     .where('student.id = :id', { id: id })
+      //     .execute();
+
+      student.lessons.push(lessonid);
+    }  
     }
-
+    console.log(student)
+    
     await student.save(); 
     return student; 
   }
@@ -95,53 +90,22 @@ export class StudentService {
     await this.studentRepository.remove(student);
   }
 
-
-  async addLessonToStudent(id: string[]): Promise<Lesson[]>{
+  async addLessonToStudent(id: number): Promise<Lesson>{
     const lessons = await getManager()
     .createQueryBuilder(Lesson, 'lesson')
     .where('lesson.id = :id', { id: id })
-    .getMany()
+    .getOne()
 
     return lessons; 
   }
 
+  async addFriendsToStudent(id: number): Promise<Student>{
+    const student = await getManager()
+    .createQueryBuilder(Student, 'student')
+    .where('student.id = :id', { id: id })
+    .getOne()
 
-  
-
-  // async addLessonToStudent(studentIDs: number[], lessonID: Lesson): Promise<void>{
-  //   const student = await this.getManyStudents(studentIDs);
-  //   const updateStudent = student.map(student => { 
-  //     student.lessons.push(lessonID);
-  //     return student;  
-  //   });
-  //   await this.studentRepository.save(updateStudent);
-  // }
-  // async getManyStudents(studentsID: number[]): Promise<Student[]>{
-  //   return await this.studentRepository.find({
-  //     where: {
-  //       id: {
-  //         $id: studentsID,
-  //       },
-  //     },
-  //   });
-  // }
-
-  // getUniqIds(ids: number[]): number[]{
-  //   return ids.filter((item, idx, arr) => arr.indexOf(item) === idx);
-  // }
-
-  // substractIdArrays(subtrahendArray: number[], subtractorArray: number[]){
-  //   return subtrahendArray.filter(id => subtractorArray.indexOf(id) === -1);
-  // }
-
-  // async getUniqExistingStudentIDs(ids: number[]): Promise<number[]>{
-  //   const uniqStudentIds = this.getUniqIds(ids);
-  //   const existingStudentIds = (await this.getManyStudents(ids)).map(student => student.id);
-  //   if(uniqStudentIds.length !== existingStudentIds.length){
-  //     const studentNotFounded = this.substractIdArrays(uniqStudentIds, existingStudentIds);
-  //     throw new NotFoundException(`Invalid studentId array, next students are not found: ${studentNotFounded.toString()}`);
-  //   }
-  //   return existingStudentIds; 
-  // }
+    return student; 
+  }
 
 }

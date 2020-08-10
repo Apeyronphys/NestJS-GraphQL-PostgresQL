@@ -12,7 +12,10 @@ export class CreateStudentDto{
 
     @IsOptional()
     @IsNotEmpty()
-    @Column({type: 'real'})
-    lessons: string[]; 
+    lessons: number[];
 
+
+    @IsOptional()
+    @IsNotEmpty()
+    friends: number[]; 
 }

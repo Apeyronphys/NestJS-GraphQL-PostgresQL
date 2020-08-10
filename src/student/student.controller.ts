@@ -29,7 +29,7 @@ export class StudentController{
         return this.studentService.createStudent(createStudentDto);
     }
 
-    @Patch()
+    @Patch('/:id')
     @UsePipes(ValidationPipe)
     updateStudent(
         @Param('id') id: number,

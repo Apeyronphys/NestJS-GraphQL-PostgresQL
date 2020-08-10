@@ -1,14 +1,16 @@
 import { Entity, BaseEntity, PrimaryGeneratedColumn, Column, OneToMany, JoinColumn, ManyToMany } from "typeorm";
 import { Type } from 'class-transformer';
 //import { Student } from "src/student/student.entity";
-import  {StudentsToLessons}  from "./lesson-student.entity";
 import { Student } from "./student.entity";
 
 
 @Entity()
 export class Lesson extends BaseEntity{
     @PrimaryGeneratedColumn()
-    id: number; 
+    id: number;
+
+    @Column({ nullable: true })
+    lessonId: string;
 
     @Column() 
     Name: string; 

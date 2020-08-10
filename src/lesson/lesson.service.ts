@@ -1,6 +1,6 @@
 import { Injectable, Inject, forwardRef, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, getManager } from 'typeorm';
 import { Lesson } from '../relations/lesson.entity';
 import { CreateLessonDto } from './dto/create.lesson.dto';
 import { UpdateLessonDto } from './dto/update.lesson.dto';
@@ -29,13 +29,11 @@ export class LessonService {
         lesson.Name = Name; 
         lesson.startDate = startDate; 
         lesson.endDate = endDate;
-        // if(students){
-        //   lesson.students = students; 
-        // } 
+        
         return this.lessonRepository.save(lesson); 
       }
 
-      async updateLesson(id: number, updateLessonDto: UpdateLessonDto/*, students: Student[]*/): Promise<Lesson>{
+      async updateLesson(id: number, updateLessonDto: UpdateLessonDto): Promise<Lesson>{
         const { Name, startDate, endDate } = updateLessonDto;
         const lesson = await this.getLesson(id);
 
@@ -51,10 +49,6 @@ export class LessonService {
           lesson.endDate = endDate; 
         }
 
-        // if(students){
-        //   lesson.students = students; 
-        // }
-
         return this.lessonRepository.save(lesson);
       }
 
@@ -62,35 +56,4 @@ export class LessonService {
         const lesson = await this.getLesson(id);
         await this.lessonRepository.remove(lesson);
       }
-
-
-
-      // async addStudentToGroup(lessonID: number[], student: number): Promise<void>{
-      //   const lesson = await this.getManyLessons(lessonID);
-      //   const updateLesson = lesson.map(lesson => {
-      //     lesson.studentId.push(student);
-      //     return lesson; 
-      //   }); 
-      //   await this.lessonRepository.save(updateLesson);
-      // }
-
-      // async getManyLessons(lessonsID: number[]): Promise<Lesson[]>{
-      //   return await this.lessonRepository.find({
-      //     where: {
-      //       id: {
-      //         $id: lessonsID,
-      //       },
-      //     },
-      //   });
-      // }
-
-      // async getUniqExitingLesson(ids: number[]): Promise<number[]>{
-      //   const uniqLessonIds = this.studentService.getUniqIds(ids);
-      //   const existungLessonIds = (await this.getManyLessons(ids)).map(lesson => lesson.id);
-      //   if(uniqLessonIds.length !== existungLessonIds.length){
-      //     const lessonIdsNotFound = this.studentService.substractIdArrays(uniqLessonIds, existungLessonIds);
-      //     throw new NotFoundException(`Invalid studentId array, next students are not found: ${lessonIdsNotFound.toString()}`);
-      //   }
-      //   return existungLessonIds; 
-      // }
 }

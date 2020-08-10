@@ -5,7 +5,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Student } from '../relations/student.entity';
 import { StudentController } from './student.controller';
 import { LessonModule } from '../lesson/lesson.module';
-import {StudentsToLessons}  from '../relations/lesson-student.entity';
 
 @Module({
   imports: [
