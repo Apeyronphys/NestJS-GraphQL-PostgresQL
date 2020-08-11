@@ -6,7 +6,6 @@ import { CreateStudentDto } from './dto/create.student.dto';
 import { UpdateStudentDto } from './dto/update.student.dto'; 
 import { LessonService } from '../lesson/lesson.service';
 import { Lesson } from 'src/relations/lesson.entity';
-import { forEachChild } from 'typescript';
 
 @Injectable()
 export class StudentService {
@@ -25,12 +24,12 @@ export class StudentService {
   }
 
   async createStudent(createStudentDto: CreateStudentDto): Promise<Student>{
-    const { firstName, lastName, lessons,friends } = createStudentDto;
+    const { firstName, lastName, lessons, friends } = createStudentDto;
     const student = new Student(); 
     student.firstName = firstName; 
     student.lastName = lastName;
-    student.lessons = []; 
-    student.friends = []; 
+    student.lessons = [];
+    student.friends = [];  
 
     if(lessons){
       for(let i = 0; i < lessons.length; i++){
@@ -39,23 +38,23 @@ export class StudentService {
       }
     } 
 
-  if(friends){
-    for(let i = 0; i < friends.length; i++){
-      const studentid = await this.addFriendsToStudent(friends[i]);
-      console.log(studentid);
-      student.friends.push(studentid);
+    if(friends){
+      for(let i = 0; i < friends.length; i++){
+        const friend = await this.addFriendsToStudent(friends[i]);
+        student.friends.push(friend);
+      }
     }
-
-  }
  
     await student.save();  
     return student;   
   }
 
   async updateStudent(id: number, updateStudentDto: UpdateStudentDto): Promise<Student>{
-    const { firstName, lastName, lessons } = updateStudentDto;
+    const { firstName, lastName, lessons, friends } = updateStudentDto;
     const student = await this.getStudent(id);
      student.lessons = []; 
+     student.friends = []; 
+
     if(firstName){
       student.firstName = firstName; 
     }
@@ -79,7 +78,13 @@ export class StudentService {
       student.lessons.push(lessonid);
     }  
     }
-    console.log(student)
+
+    if(friends){
+      for(let i = 0; i < friends.length; i++){
+        const friend = await this.addFriendsToStudent(friends[i]);
+        student.friends.push(friend);
+      }
+    }
     
     await student.save(); 
     return student; 
@@ -100,9 +105,9 @@ export class StudentService {
   }
 
   async addFriendsToStudent(id: number): Promise<Student>{
-    const student = await getManager()
-    .createQueryBuilder(Student, 'student')
-    .where('student.id = :id', { id: id })
+    const student = await getRepository(Student)
+    .createQueryBuilder("student")
+    .where("student.id = :id", { id: id })
     .getOne()
 
     return student; 

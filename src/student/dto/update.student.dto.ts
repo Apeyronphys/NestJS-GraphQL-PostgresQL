@@ -12,5 +12,9 @@ export class UpdateStudentDto{
     
     @IsOptional()
     @IsNotEmpty()
-    lessons: number[]; 
+    lessons: number[];
+    
+    @IsOptional()
+    @IsNotEmpty()
+    friends: number[];
 }
